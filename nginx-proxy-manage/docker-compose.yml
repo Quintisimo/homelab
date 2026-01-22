@@ -1,0 +1,20 @@
+name: nginx-proxy-manage
+
+services:
+  nginx-proxy-manage:
+    container_name: nginx-proxy-manage
+    image: jc21/nginx-proxy-manager:latest@sha256:a047f943b8544502417ad58b33f2468dea0eee46370fbccae3c14522e01fc17c
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - nginx-proxy-manage:/data
+      - nginx-proxy-manage-lets-encrypt:/etc/letsencrypt
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  nginx-proxy-manage:
+    external: true
+    name: nginx-proxy-manage
+  nginx-proxy-manage-lets-encrypt:
+    external: true
+    name: nginx-proxy-manage-lets-encrypt

@@ -1,0 +1,22 @@
+name: gotify
+
+networks:
+  tunnel:
+    external: true
+    name: tunnel
+
+services:
+  gotify:
+    container_name: gotify
+    image: gotify/server:latest@sha256:0335ac91231c19d8761a0531a279da0534ca53c3b713f24e8af54258b690b75a
+    networks:
+      - tunnel
+    restart: unless-stopped
+    volumes:
+      - gotify:/app/data
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  gotify:
+    external: true
+    name: gotify

@@ -1,0 +1,26 @@
+name: Linting
+run-name: Linting
+
+on:
+  pull_request:
+
+jobs:
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+
+      - name: Install yq
+        uses: mikefarah/yq@v4
+
+      - name: Format docker compose files
+        run: ./dc-fmt.sh
+
+      - name: Check for uncommitted changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "YAML files are not properly formatted. Please run the yaml-format.sh script and commit the changes."
+            exit 1
+          fi

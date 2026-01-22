@@ -1,0 +1,17 @@
+name: home-assistant
+
+services:
+  home-assistant:
+    container_name: home-assistant
+    image: ghcr.io/home-assistant/home-assistant:stable@sha256:3007eeeaf87d1e3a2047faeac6ff01dfef218b8a404bdff3ce421c1f4f363a43
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - home-assistant:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+
+volumes:
+  home-assistant:
+    external: true
+    name: home-assistant
