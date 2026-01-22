@@ -1,0 +1,21 @@
+name: pi-hole
+
+services:
+  pi-hole:
+    container_name: pi-hole
+    env_file:
+      - secrets.enc.env
+    image: pihole/pihole:latest@sha256:bf6a909c47526000014be90046b367d1cf8fb0c119768455cac60de9948a1de8
+    ports:
+      - 53:53/udp
+      - 53:53/tcp
+      - 8081:80
+    restart: unless-stopped
+    volumes:
+      - pi-hole:/etc/pihole
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  pi-hole:
+    external: true
+    name: pi-hole

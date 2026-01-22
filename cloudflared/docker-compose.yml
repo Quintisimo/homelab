@@ -1,0 +1,17 @@
+name: cloudflared
+
+networks:
+  tunnel:
+    external: true
+    name: tunnel
+
+services:
+  clouddflared:
+    command: tunnel --no-autoupdate run
+    container_name: cloudflared
+    env_file:
+      - secrets.enc.env
+    image: cloudflare/cloudflared:latest@sha256:a7e94c22ff91d3acb729ed48f41d5cfed8b897fad597b44088998fa4dce47ff7
+    networks:
+      - tunnel
+    restart: unless-stopped
