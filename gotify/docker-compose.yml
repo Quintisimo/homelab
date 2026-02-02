@@ -8,7 +8,7 @@ networks:
 services:
   gotify:
     container_name: gotify
-    image: gotify/server:latest@sha256:0335ac91231c19d8761a0531a279da0534ca53c3b713f24e8af54258b690b75a
+    image: gotify/server:latest@sha256:4702c392ca723d5016fc938c8b22572c3509efca812bdc5221d25158ba0201e3
     networks:
       - tunnel
     restart: unless-stopped
