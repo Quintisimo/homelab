@@ -3,7 +3,7 @@ name: nginx-proxy-manager
 services:
   nginx-proxy-manage:
     container_name: nginx-proxy-manager
-    image: jc21/nginx-proxy-manager:latest@sha256:a047f943b8544502417ad58b33f2468dea0eee46370fbccae3c14522e01fc17c
+    image: jc21/nginx-proxy-manager:latest@sha256:08e0997ce1cc8738637b0e271a727815ea89ed564ce392e0f9035f1a03c089c5
     network_mode: host
     restart: unless-stopped
     volumes:
