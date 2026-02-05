@@ -1,0 +1,31 @@
+configs:
+  Caddyfile:
+    file: ./Caddyfile
+
+name: caddy
+
+services:
+  caddy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    configs:
+      - source: Caddyfile
+        target: /etc/caddy/Caddyfile
+    container_name: caddy
+    env_file:
+      - secrets.enc.env
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - caddy:/config
+      - caddy-data:/data
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  caddy:
+    external: true
+    name: caddy
+  caddy-data:
+    external: true
+    name: caddy-data

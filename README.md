@@ -16,7 +16,6 @@ services:
       SOPS_AGE_KEY: your_age_key_here
       POLL_CONFIG: |
         - url: https://github.com/quintisimo/homelab
-          interval: 604800 # once a week
     healthcheck:
       interval: 30s
       retries: 3

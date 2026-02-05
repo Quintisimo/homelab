@@ -1,0 +1,44 @@
+{
+  email {env.EMAIL}
+}
+
+*.{$DOMAIN} {
+	tls {
+	  dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	}
+
+	@wm host wm.{$DOMAIN}
+	handle @wm {
+		request_body {
+			max_size 64GB
+		}
+
+		reverse_proxy https://{$LOOPBACK}:10000 {
+			transport http {
+				tls_insecure_skip_verify
+			}
+
+			flush_interval -1
+		}
+	}
+
+	@ha host ha.{$DOMAIN}
+	handle @ha {
+		reverse_proxy http://{$LOOPBACK}:8123
+	}
+
+	@hp host hp.{$DOMAIN}
+	handle @hp {
+		reverse_proxy http://{$LOOPBACK}:3001
+	}
+
+	@ph host ph.{$DOMAIN}
+	handle @ph {
+	  rewrite / /admin
+		reverse_proxy http://{$LOOPBACK}:8081
+	}
+
+	handle {
+		abort
+	}
+}
