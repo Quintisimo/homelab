@@ -33,14 +33,14 @@ pages:
             title: Services
             sites:
               - title: Webmin
-                url: https://wm.home.quintuscardozo.dev
+                url: https://wm.${DOMAIN}
+                check-url: https://${LOOPBACK}:10000
+                allow-insecure: true
                 icon: sh:webmin-light
               - title: Home Assistant
-                url: https://ha.home.quintuscardozo.dev
+                url: https://ha.${DOMAIN}
+                check-url: http://${LOOPBACK}:8123
                 icon: sh:home-assistant-light
-              - title: Pi Hole
-                url: https://ph.home.quintuscardozo.dev
-                icon: sh:pi-hole-light
           - type: custom-api
             title: Trending Repositories
             cache: 24h

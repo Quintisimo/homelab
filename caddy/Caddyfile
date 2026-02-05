@@ -32,12 +32,6 @@
 		reverse_proxy http://{$LOOPBACK}:3001
 	}
 
-	@ph host ph.{$DOMAIN}
-	handle @ph {
-	  rewrite / /admin
-		reverse_proxy http://{$LOOPBACK}:8081
-	}
-
 	handle {
 		abort
 	}

@@ -10,6 +10,8 @@ services:
       - source: glance.yml
         target: /app/config/glance.yml
     container_name: glance
+    env_file:
+      - secrets.enc.env
     image: glanceapp/glance:latest@sha256:6df86a7e8868d1eda21f35205134b1962c422957e42a0c44d4717c8e8f741b1a
     network_mode: host
     restart: unless-stopped
