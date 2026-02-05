@@ -1,0 +1,262 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json
+server:
+  proxied: true
+
+branding:
+  hide-footer: true
+
+theme:
+  background-color: 240 21 15
+  contrast-multiplier: 1.2
+  primary-color: 217 92 83
+  positive-color: 115 54 76
+  negative-color: 347 70 65
+
+pages:
+  - name: Home
+    hide-desktop-navigation: true
+    center-vertically: true
+    columns:
+      - size: small
+        widgets:
+          - type: server-stats
+            servers:
+              - type: local
+                name: Server
+          - type: hacker-news
+            collapse-after: 6
+      - size: full
+        widgets:
+          - type: monitor
+            cache: 1m
+            title: Services
+            sites:
+              - title: Webmin
+                url: https://wm.home.quintuscardozo.dev
+                icon: sh:webmin-light
+              - title: Home Assistant
+                url: https://ha.home.quintuscardozo.dev
+                icon: sh:home-assistant-light
+              - title: Pi Hole
+                url: https://ph.home.quintuscardozo.dev
+                icon: sh:pi-hole-light
+          - type: custom-api
+            title: Trending Repositories
+            cache: 24h
+            url: "https://api.ossinsight.io/v1/trends/repos/?period=past_week&language=All"
+            template: |
+              <ul class="list list-gap-10 collapsible-container" data-collapse-after="4">
+                {{ range .JSON.Array "data.rows"}}
+                  <li>
+                    <a class="color-primary-if-not-visited" href="https://github.com/{{ .String "repo_name" }}">{{ .String "repo_name" }}</a>
+                    <ul class="list-horizontal-text">
+                        <li class="color-highlight"> {{.String "primary_language"}} </li>
+
+                        <li style="display: flex; align-items: center;gap: 4px;">
+                          {{ .Int "stars" }}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                          </svg>
+                        </li>
+
+                        <li style="display: flex; align-items: center;gap: 4px;">
+                          {{ .Int "forks" }}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <circle cx="12" cy="18" r="2" />
+                            <circle cx="7" cy="6" r="2" />
+                            <circle cx="17" cy="6" r="2" />
+                            <path d="M7 8v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2 -2v-2" />
+                            <path d="M12 12l0 4" />
+                          </svg>
+                        </li>
+
+                        <li style="display: flex; align-items: center;gap: 4px;">
+                          {{ .Int "pull_requests" }}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                            <circle cx="6" cy="6" r="3"></circle>
+                            <circle cx="18" cy="18" r="3"></circle>
+                            <path d="M13 6h3a2 2 0 0 1 2 2v7"></path>
+                            <line x1="6" y1="9" x2="6" y2="21"></line>
+                          </svg>
+                        </li>
+
+                    </ul>
+                    <ul class="list collapsible-container">
+                      <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="color-subdue">
+                        Contributors: {{ .String "contributor_logins"}}
+                      </li>
+                      <li>
+                        {{ .String "description" }}
+                      </li>
+                    </ul>
+                  </li>
+                {{ end }}
+              </ul>
+      - size: small
+        widgets:
+          - type: weather
+            location: Brisbane, Australia
+          - type: group
+            widgets:
+              - type: custom-api
+                title: Day
+                body-type: string
+                skip-json-validation: true
+                cache: 1s
+                template: |
+                  {{ $localTime := now }}
+                  {{ $secondsPerDay := 86400 }}
+                  {{ $elapsedSeconds := add (mul $localTime.Hour 3600) (mul $localTime.Minute 60) | add $localTime.Second }}
+                  {{ $dayProgress := div (mul $elapsedSeconds 100.0) $secondsPerDay }}
+
+                  {{ $gradient := "" }}
+                  {{ if lt $dayProgress 10.0 }}
+                    {{ $gradient = "#70a1ff" }}
+                  {{ else if lt $dayProgress 25.0 }}
+                    {{ $gradient = "#ff6b6b, #70a1ff" }}
+                  {{ else if lt $dayProgress 50.0 }}
+                    {{ $gradient = "#ff6b6b, #f8e71c, #7ed6df" }}
+                  {{ else }}
+                    {{ $gradient = "#ff6b6b, #f8e71c, #7ed6df, #70a1ff" }}
+                  {{ end }}
+
+                  <div style="font-family: sans-serif; text-align: center;">
+                    <div style="width: 100%; height: 12px; background: #23262F; border:1px solid gray; border-radius: 10px; overflow: hidden;">
+                      <div style="
+                        height: 100%;
+                        width: {{ $dayProgress }}%;
+                        background: linear-gradient(90deg, {{ $gradient }});
+                      "></div>
+                    </div>
+                    <div class="size-h1" style="margin-top: 6px;">{{ printf "%.2f" $dayProgress }}% of the day has passed</div>
+                  </div>
+              - type: custom-api
+                title: Month
+                body-type: string
+                skip-json-validation: true
+                cache: 1s
+                template: |
+                  {{ $localTime := now }}
+
+                  {{ $month := $localTime.Month }}
+                  {{ $dayOfMonth := $localTime.Day }}
+
+                  {{ $secondsToday := add (mul $localTime.Hour 3600) (mul $localTime.Minute 60) | add $localTime.Second }}
+                  {{ $fractionOfDay := div $secondsToday 86400.0 }}
+
+                  {{ $daysInMonth := 31 }}
+                  {{ if eq $month 2 }} {{ $daysInMonth = 28 }} {{ end }}
+                  {{ if or (eq $month 4) (eq $month 6) (eq $month 9) (eq $month 11) }} {{ $daysInMonth = 30 }} {{ end }}
+
+                  {{ $daysElapsed := add (sub $dayOfMonth 1) $fractionOfDay }}
+                  {{ $monthProgress := mul (div $daysElapsed $daysInMonth) 100.0 }}
+
+                  {{ $gradient := "" }}
+                  {{ if lt $monthProgress 10.0 }}
+                    {{ $gradient = "#70a1ff" }}
+                  {{ else if lt $monthProgress 25.0 }}
+                    {{ $gradient = "#ff6b6b, #70a1ff" }}
+                  {{ else if lt $monthProgress 50.0 }}
+                    {{ $gradient = "#ff6b6b, #f8e71c, #7ed6df" }}
+                  {{ else }}
+                    {{ $gradient = "#ff6b6b, #f8e71c, #7ed6df, #70a1ff" }}
+                  {{ end }}
+
+                  <div style="font-family: sans-serif; text-align: center;">
+                    <div style="width: 100%; height: 12px; background: #23262F; border:1px solid gray; border-radius: 10px; overflow: hidden;">
+                      <div style="
+                        height: 100%;
+                        width: {{ $monthProgress }}%;
+                        background: linear-gradient(90deg, {{ $gradient }});
+                      "></div>
+                    </div>
+                    <div class="size-h1" style="margin-top: 6px;">{{ printf "%.2f" $monthProgress }}% of the month has passed</div>
+                  </div>
+              - type: custom-api
+                title: Year
+                body-type: string
+                skip-json-validation: true
+                cache: 1s
+                template: |
+                  {{ $localTime := now }}
+
+                  {{ $secondsToday := add (mul $localTime.Hour 3600) (mul $localTime.Minute 60) | add $localTime.Second }}
+                  {{ $dayOfYear := $localTime.YearDay }}
+                  {{ $secondsElapsed := add (mul (sub $dayOfYear 1) 86400) $secondsToday }}
+
+                  {{ $totalSecondsInYear := mul 365 86400 }}
+                  {{ $yearProgress := div (mul $secondsElapsed 100.0) $totalSecondsInYear }}
+
+                  {{ $gradient := "" }}
+                  {{ if lt $yearProgress 10.0 }}
+                    {{ $gradient = "#70a1ff" }}
+                  {{ else if lt $yearProgress 25.0 }}
+                    {{ $gradient = "#ff6b6b, #70a1ff" }}
+                  {{ else if lt $yearProgress 50.0 }}
+                    {{ $gradient = "#ff6b6b, #f8e71c, #7ed6df" }}
+                  {{ else }}
+                    {{ $gradient = "#ff6b6b, #f8e71c, #7ed6df, #70a1ff" }}
+                  {{ end }}
+
+                  <div style="font-family: sans-serif; text-align: center;">
+                    <div style="width: 100%; height: 12px; background: #23262F; border:1px solid gray; border-radius: 10px; overflow: hidden;">
+                      <div style="
+                        height: 100%;
+                        width: {{ $yearProgress }}%;
+                        background: linear-gradient(90deg, {{ $gradient }});
+                      "></div>
+                    </div>
+                    <div class="size-h1" style="margin-top: 6px;">{{ printf "%.2f" $yearProgress }}% of the year has passed</div>
+                  </div>
+          - type: custom-api
+            title: Epic Games
+            cache: 1h
+            url: https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?locale=en&country=AU&allowCountries=AU
+            template: |
+              <div>
+                {{ if eq .Response.StatusCode 200 }}
+                  <div class="horizontal-cards-2">
+                    {{ range .JSON.Array "data.Catalog.searchStore.elements" }}
+                      {{ $price := .String "price.totalPrice.discountPrice" }}
+                      {{ $hasPromo := gt (len (.Array "promotions.promotionalOffers")) 0 }}
+                      {{ if and $hasPromo (eq $price "0") }}
+                        {{ $gamePage := .String "productSlug" }}
+                        {{ if gt (len (.Array "offerMappings")) 0 }}
+                          {{ $gamePage = .String "offerMappings.0.pageSlug" }}
+                        {{end }}
+                        <a href="https://store.epicgames.com/en-US/p/{{ $gamePage }}" target="_blank" class="card">
+                          {{ $title := .String "title" }}
+                          {{ range .Array "keyImages" }}
+                            {{ if eq (.String "type") "OfferImageWide" }}
+                              <img src="{{ .String "url" }}" alt="{{ $title }}" style="width: 100%; max-width: 300px; height: 150px; object-fit: cover; border-radius: var(--border-radius);">
+                            {{ end }}
+                          {{ end }}
+                          <div class="card-content">
+                            <span class="size-base color-primary">{{ $title }}</span><br>
+                            <span class="size-h5 color-subdue">
+                              {{ if $hasPromo }}
+                                {{ $promotions := .Array "promotions.promotionalOffers" }}
+                                {{ if gt (len $promotions) 0 }}
+                                  {{ $firstPromo := index $promotions 0 }}
+                                  {{ $offers := $firstPromo.Array "promotionalOffers" }}
+                                  {{ if gt (len $offers) 0 }}
+                                    {{ $firstOffer := index $offers 0 }}
+                                    Free until {{ slice ($firstOffer.String "endDate") 0 10 }}
+                                  {{ else }}
+                                    Free this week!
+                                  {{ end }}
+                                {{ else }}
+                                  Free this week!
+                                {{ end }}
+                              {{ end }}
+                            </span>
+                          </div>
+                        </a>
+                      {{ end }}
+                    {{ end }}
+                  </div>
+                {{ else }}
+                  <p class="color-negative">Error fetching Epic Games data.</p>
+                {{ end }}
+              </div>

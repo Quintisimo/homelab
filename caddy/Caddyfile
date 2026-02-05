@@ -27,8 +27,8 @@
 		reverse_proxy http://{$LOOPBACK}:8123
 	}
 
-	@hp host hp.{$DOMAIN}
-	handle @hp {
+	@gl host gl.{$DOMAIN}
+	handle @gl {
 		reverse_proxy http://{$LOOPBACK}:3001
 	}
 
