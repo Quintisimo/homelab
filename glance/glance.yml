@@ -1,5 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/not-first/glance-schema/master/schema.json
 server:
+  port: 3001
   proxied: true
 
 branding:
