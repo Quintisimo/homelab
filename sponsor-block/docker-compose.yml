@@ -1,0 +1,44 @@
+configs:
+  config.json:
+    content: |
+      {
+        "devices": [
+          {
+            "screen_id": "${SCREEN_ID}",
+            "name": "Bedroom TV",
+            "offset": 0
+          }
+        ],
+        "apikey": "",
+        "skip_categories": [
+          "sponsor",
+          "selfpromo",
+          "outro",
+          "intro",
+          "music_offtopic",
+          "interaction",
+          "exclusive_access",
+          "poi_highlight",
+          "preview",
+          "filler"
+        ],
+        "channel_whitelist": [],
+        "skip_count_tracking": true,
+        "mute_ads": false,
+        "skip_ads": false,
+        "minimum_skip_length": 1,
+        "auto_play": false,
+        "join_name": "iSponsorBlockTV",
+        "use_proxy": false
+      }
+
+name: sponsor-block
+
+services:
+  sponsor-block:
+    configs:
+      - source: config.json
+        target: /app/data/config.json
+    container_name: sponsor-block
+    image: ghcr.io/dmunozv04/isponsorblocktv:latest@sha256:545856523283753ebcf4b400a46895b9906844be5265a0f4cab98a6b0bdf84be
+    restart: unless-stopped
