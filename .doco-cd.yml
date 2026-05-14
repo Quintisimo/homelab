@@ -1,4 +1,4 @@
 name: homelab
-auto_discover: true
+auto_discovery: true
 env_files:
   - secrets.enc.env
