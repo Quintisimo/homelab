@@ -40,5 +40,5 @@ services:
       - source: config.json
         target: /app/data/config.json
     container_name: sponsor-block
-    image: ghcr.io/dmunozv04/isponsorblocktv:latest@sha256:5b8cfa805cb60b99a9e83a2df62d41c63865a315f7ee7cfed1a78052d93650b6
+    image: ghcr.io/dmunozv04/isponsorblocktv:latest@sha256:f2e4c7e57f6fcb490156759bcc79561ac594675354923a71f1f034a3fe39d7de
     restart: unless-stopped
