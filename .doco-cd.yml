@@ -1,4 +1,9 @@
 name: homelab
-auto_discovery: true
+auto_discovery:
+  enabled: true
+  depth: 0
+  delete: true
+  remove_volumes: false
+  remove_images: true
 env_files:
   - secrets.enc.env

@@ -16,6 +16,7 @@ services:
       SOPS_AGE_KEY: your_age_key_here
       POLL_CONFIG: |
         - url: https://github.com/quintisimo/homelab
+          reference: main
     healthcheck:
       interval: 30s
       retries: 3
@@ -28,7 +29,7 @@ services:
     image: ghcr.io/kimdre/doco-cd:latest
     restart: unless-stopped
     volumes:
-      - doco-cd:/etc/doco-cd
+      - doco-cd:/data
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
